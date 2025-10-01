@@ -2,8 +2,13 @@ package main
 
 import (
 	"fmt"
+	"os"
 )
 
+func writeBalanceToFile(balance float64) {
+	balanceText := fmt.Sprint(balance)
+	os.WriteFile("balance.txt", []byte(balanceText), 0644)
+}
 func main() {
 	var accountBalance = 1000.0
 
@@ -16,7 +21,7 @@ func main() {
 		fmt.Println("4. Exit")
 
 		var input int
-		fmt.Println("your choice is", input)
+		fmt.Print("your choice is")
 		fmt.Scan(&input)
 
 		switch input {
@@ -31,6 +36,7 @@ func main() {
 				continue
 			}
 			accountBalance += inputDeposit
+			writeBalanceToFile(accountBalance)
 			fmt.Println("Balance updated, your current balance is: ", accountBalance)
 		case 3:
 
@@ -47,6 +53,7 @@ func main() {
 				continue
 			}
 			accountBalance -= inputWithdraw
+			writeBalanceToFile(accountBalance)
 			fmt.Println("Balance updated, your current balance is: ", accountBalance)
 		default:
 			fmt.Println("See ya")
