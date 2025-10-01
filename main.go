@@ -8,11 +8,17 @@ import (
 
 const accountBalanceFile = "balance.txt"
 
-func getBalanceFromFile() float64 {
-	data, _ := os.ReadFile(accountBalanceFile)
+func getBalanceFromFile() (float64, error) {
+	data, err := os.ReadFile(accountBalanceFile)
+	if err != nil {
+		return 1000, err
+	}
 	balanceText := string(data)
-	balance, _ := strconv.ParseFloat(balanceText, 64)
-	return balance
+	balance, err := strconv.ParseFloat(balanceText, 64)
+	if err != nil {
+		return 1000, err
+	}
+	return balance, nil
 }
 
 func writeBalanceToFile(balance float64) {
@@ -20,7 +26,12 @@ func writeBalanceToFile(balance float64) {
 	os.WriteFile(accountBalanceFile, []byte(balanceText), 0644)
 }
 func main() {
-	var accountBalance = getBalanceFromFile()
+	var accountBalance, err = getBalanceFromFile()
+	if err != nil {
+		fmt.Println("Error getting account balance")
+		fmt.Println(err)
+		fmt.Println("----------")
+	}
 
 	fmt.Println("Welcome to Go Bank")
 	for i := 0; i < 10; i++ {
