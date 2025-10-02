@@ -2,31 +2,13 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"strconv"
+	"golang-rest-api/fileops"
 )
 
 const accountBalanceFile = "balance.txt"
 
-func getBalanceFromFile() (float64, error) {
-	data, err := os.ReadFile(accountBalanceFile)
-	if err != nil {
-		return 1000, err
-	}
-	balanceText := string(data)
-	balance, err := strconv.ParseFloat(balanceText, 64)
-	if err != nil {
-		return 1000, err
-	}
-	return balance, nil
-}
-
-func writeBalanceToFile(balance float64) {
-	balanceText := fmt.Sprint(balance)
-	os.WriteFile(accountBalanceFile, []byte(balanceText), 0644)
-}
 func main() {
-	var accountBalance, err = getBalanceFromFile()
+	var accountBalance, err = fileops.GetFloatFromFile(accountBalanceFile)
 	if err != nil {
 		fmt.Println("Error getting account balance")
 		fmt.Println(err)
@@ -53,7 +35,7 @@ func main() {
 				continue
 			}
 			accountBalance += inputDeposit
-			writeBalanceToFile(accountBalance)
+			fileops.WriteFloatToFile(accountBalance, accountBalanceFile)
 			fmt.Println("Balance updated, your current balance is: ", accountBalance)
 		case 3:
 
@@ -70,7 +52,7 @@ func main() {
 				continue
 			}
 			accountBalance -= inputWithdraw
-			writeBalanceToFile(accountBalance)
+			fileops.WriteFloatToFile(accountBalance, accountBalanceFile)
 			fmt.Println("Balance updated, your current balance is: ", accountBalance)
 		default:
 			fmt.Println("See ya")
